@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/menu_background"
+    android:orientation="vertical"
+    android:id="@+id/add_word_layout">
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="Return"
+        android:textSize="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:onClick="returnMenu"
+        android:id="@+id/returnButton"
+        ></Button>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/question_input"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/returnButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        app:helperText="Please Enter Your Question"
+        app:helperTextEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Question"
+            android:id="@+id/question"></com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/answer_input"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question_input"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        app:helperText="Please Enter Your Answer"
+        app:helperTextEnabled="true"
+        app:counterEnabled="true"
+        app:counterMaxLength="10"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Answer"
+            android:id="@+id/answer"></com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/answer_input"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="138dp"
+        android:onClick="addItem"
+        android:text="Insert"
+        android:textSize="15dp"></Button>
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/add_button"
+        android:onClick="complete"
+        android:text="Start"
+        android:textSize="15dp"
+        android:layout_centerHorizontal="true"
+        ></Button>
+
+</RelativeLayout>

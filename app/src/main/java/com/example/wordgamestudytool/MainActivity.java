@@ -1,8 +1,7 @@
 package com.example.wordgamestudytool;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -11,11 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wordgamestudytool.model.Input;
+import com.example.wordgamestudytool.model.RecListViewAdapter;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -69,12 +68,20 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Insert Successful", Toast.LENGTH_SHORT).show();
             question.setText("");
             answer.setText("");
+
+            Input input = new Input(q, a);
+            inputs.add(input);
         }
     }
 
     public void showItem(View view){
+        setContentView(R.layout.list_view);
         listRecycleView = findViewById(R.id.listView);
+        RecListViewAdapter recListViewAdapter = new RecListViewAdapter();
+        recListViewAdapter.setInputs(inputs);
 
+        listRecycleView.setAdapter(recListViewAdapter);
+        listRecycleView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     public void complete(View view){

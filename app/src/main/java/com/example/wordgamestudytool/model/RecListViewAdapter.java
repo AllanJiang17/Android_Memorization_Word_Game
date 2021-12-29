@@ -10,16 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wordgamestudytool.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-public class RecListView extends RecyclerView.Adapter<RecListView.ViewHolder> {
+public class RecListViewAdapter extends RecyclerView.Adapter<RecListViewAdapter.ViewHolder> {
 
     private ArrayList<Input> inputs = new ArrayList<>();
 
-    public RecListView() {
-
+    public RecListViewAdapter() {
     }
 
     @NonNull
@@ -33,7 +30,6 @@ public class RecListView extends RecyclerView.Adapter<RecListView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.question.setText(inputs.get(position).getQuestion());
-        holder.answer.setText(inputs.get(position).getAnswer());
     }
 
     @Override
@@ -53,12 +49,9 @@ public class RecListView extends RecyclerView.Adapter<RecListView.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView question;
-        private TextView answer;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             question = itemView.findViewById(R.id.question);
-            answer = itemView.findViewById(R.id.answer);
         }
     }
 }

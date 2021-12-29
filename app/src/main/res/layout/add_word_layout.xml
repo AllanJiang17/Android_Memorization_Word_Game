@@ -64,20 +64,30 @@
         android:layout_height="40dp"
         android:layout_below="@+id/answer_input"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="138dp"
+        android:layout_marginTop="120dp"
         android:onClick="addItem"
         android:text="Insert"
         android:textSize="15dp"></Button>
 
     <Button
+        android:id="@+id/view_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/add_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp"
+        android:onClick="showItem"
+        android:text="View List"
+        android:textSize="15dp"></Button>
+
+    <Button
         android:layout_width="100dp"
         android:layout_height="40dp"
+        android:layout_below="@+id/view_button"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:layout_below="@+id/add_button"
         android:onClick="complete"
         android:text="Start"
-        android:textSize="15dp"
-        android:layout_centerHorizontal="true"
-        ></Button>
+        android:textSize="15dp"></Button>
 
 </RelativeLayout>

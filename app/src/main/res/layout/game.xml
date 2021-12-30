@@ -21,7 +21,7 @@
         android:id="@+id/textQuestion"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/backgroundquestion"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -33,7 +33,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/textQuestion"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/backgroundquestion"
         android:clickable="false"
         android:focusable="false"
@@ -41,6 +41,15 @@
         android:textAlignment="center"
         android:textSize="32dp"
         android:layout_gravity="center"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Return"
+        android:textSize="12dp"
+        android:onClick="returnInsertFromGame"></Button>
 
     <LinearLayout
         android:id="@+id/letterRoot"

@@ -13,19 +13,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wordgamestudytool.database.DB;
 import com.example.wordgamestudytool.model.Input;
-import com.example.wordgamestudytool.model.RecListViewAdapter;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    private HashMap<String, String> questionAnswer;
     private int counter = 0;
     private int maxPresCounter;
     TextView textQuestion;
@@ -35,60 +32,82 @@ public class MainActivity extends AppCompatActivity {
     String answer;
     String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
     private RecyclerView listRecycleView;
-    private ArrayList<Input> inputs;
+    private static ArrayList<Input> inputs;
+    RecListViewAdapter recListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        questionAnswer = new HashMap<>();
         setContentView(R.layout.activity_main);
-        inputs = new ArrayList<>();
+        inputs = (ArrayList<Input>) loadDB();
+        recListViewAdapter = new RecListViewAdapter();
     }
 
-    public void startGame(View view){
+    private List<Input> loadDB() {
+        DB dataBase = DB.getInstance(this.getApplicationContext());
+        return dataBase.inputDAO().getAllInputs();
+    }
+
+    private void saveDB(Input input) {
+        DB dataBase = DB.getInstance(this.getApplicationContext());
+        dataBase.inputDAO().insertInput(input);
+    }
+
+
+    public void startGame(View view) {
         setContentView(R.layout.add_word_layout);
     }
 
-    public void returnMenu(View view){
+    public void returnMenu(View view) {
         setContentView(R.layout.activity_main);
     }
 
-    public void addItem(View view){
+    public void returnInsertFromGame(View view) {
+        progressBar.destroyDrawingCache();
+        progressBar.setProgress(0);
+        setContentView(R.layout.add_word_layout);
+    }
+
+    public void returnInsert(View view) {
+        setContentView(R.layout.add_word_layout);
+    }
+
+    public void addItem(View view) {
         TextInputEditText question = findViewById(R.id.question);
         TextInputEditText answer = findViewById(R.id.answer);
         String q = question.getText().toString();
         String a = answer.getText().toString();
-        if(q.isEmpty()){
+        if (q.isEmpty()) {
             question.setError("Question Empty");
-        } else if (a.isEmpty() || a.length() > 10){
+        } else if (a.isEmpty() || a.length() > 10) {
             answer.setError("Answer Empty or Over length of 10");
         } else {
-            questionAnswer.put(q, a);
             Toast.makeText(this, "Insert Successful", Toast.LENGTH_SHORT).show();
             question.setText("");
             answer.setText("");
 
             Input input = new Input(q, a);
-            inputs.add(input);
+            saveDB(input);
         }
     }
 
-    public void showItem(View view){
+    public void showItem(View view) {
         setContentView(R.layout.list_view);
         listRecycleView = findViewById(R.id.listView);
-        RecListViewAdapter recListViewAdapter = new RecListViewAdapter();
         recListViewAdapter.setInputs(inputs);
 
         listRecycleView.setAdapter(recListViewAdapter);
         listRecycleView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    public void complete(View view){
-        if(questionAnswer.size() > 0) {
+    public void complete(View view) {
+        if (inputs.size() > 0) {
             setContentView(R.layout.game);
-            progressBar = findViewById(R.id.progress_bar);
             iterator = 0;
+            progressBar = findViewById(R.id.progress_bar);
+            progressBar.destroyDrawingCache();
+            progressBar.setProgress(0);
             initiateGame();
         } else {
             Toast.makeText(MainActivity.this, "No Entries", Toast.LENGTH_SHORT).show();
@@ -96,48 +115,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initiateGame() {
-        if(questionAnswer.size() > iterator){
-            progressBar.setMax(questionAnswer.size());
-            Set<String> question = questionAnswer.keySet();
-            TextView questionView = findViewById(R.id.textQuestion);
-            String q = (String) question.toArray()[iterator];
-            questionView.setText(q);
-            iterator++;
-            answer = questionAnswer.get(q);
-            options = new ArrayList<>();
-            for(int i = 0; i < answer.length(); ++i){
-                options.add(answer.substring(i, i+1).toLowerCase());
+        progressBar.setMax(inputs.size());
+        TextView questionView = findViewById(R.id.textQuestion);
+        String q = inputs.get(iterator).getQuestion();
+        questionView.setText(q);
+        answer = inputs.get(iterator).getAnswer();
+        options = new ArrayList<>();
+        for (int i = 0; i < answer.length(); ++i) {
+            options.add(answer.substring(i, i + 1).toLowerCase());
+        }
+        List<String> otherLetters = new ArrayList<>();
+        for (String s : alphabet) {
+            if (!options.contains(s)) {
+                otherLetters.add(s);
             }
-            List<String> otherLetters = new ArrayList<>();
-            for(String s : alphabet){
-                if(!options.contains(s)){
-                    otherLetters.add(s);
-                }
-            }
-            while(options.size() < 10){
-                Random rnd = new Random();
-                int index = rnd.nextInt(otherLetters.size());
-                options.add(otherLetters.get(index));
-            }
+        }
+        while (options.size() < 10) {
+            Random rnd = new Random();
+            int index = rnd.nextInt(otherLetters.size());
+            options.add(otherLetters.get(index));
+        }
 
-            options = shuffle(options);
-            maxPresCounter = answer.length();
+        options = shuffle(options);
+        maxPresCounter = answer.length();
+        iterator++;
 //        for (String a : options) {
 //            addView(((LinearLayout) findViewById(R.id.letterRoot)), a, ((EditText) findViewById(R.id.answers)));
 //        }
 
-            for (int i = 9 ; i >= 0 ; i--)
-            {
-                String key = options.get(i);
-                if(i>4)
-                    addView(((LinearLayout) findViewById(R.id.letterRoot)), key, ((EditText) findViewById(R.id.answers)));
-                else
-                    addView(((LinearLayout) findViewById(R.id.letterRoot1)), key, ((EditText) findViewById(R.id.answers)));
-            }
-        } else {
-            questionAnswer.clear();
-            setContentView(R.layout.add_word_layout);
+        for (int i = 9; i >= 0; i--) {
+            String key = options.get(i);
+            if (i > 4)
+                addView(((LinearLayout) findViewById(R.id.letterRoot)), key, ((EditText) findViewById(R.id.answers)));
+            else
+                addView(((LinearLayout) findViewById(R.id.letterRoot1)), key, ((EditText) findViewById(R.id.answers)));
         }
+
+
     }
 
     private List<String> shuffle(List<String> list) {
@@ -153,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addView(LinearLayout viewParent, final String text, final EditText editText) {
         LinearLayout.LayoutParams linearLayoutSize = new LinearLayout.LayoutParams(
-                150,200
+                150, 200
         );
 
         linearLayoutSize.rightMargin = 30;
@@ -173,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(counter < maxPresCounter) {
+                if (counter < maxPresCounter) {
                     if (counter == 0) {
                         editText.setText("");
                     }
@@ -188,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         viewParent.addView((textView));
     }
 
@@ -201,19 +216,36 @@ public class MainActivity extends AppCompatActivity {
 
         if (editText.getText().toString().equals(answer.toLowerCase())) {
             progressBar.incrementProgressBy(1);
-            Snackbar.make(parent, "Correct", Snackbar.LENGTH_INDEFINITE)
-                    .setTextColor(getResources().getColor(R.color.black))
-                    .setAction("Next", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            editText.setText("");
-                            linearLayout.removeAllViews();
-                            linearLayout1.removeAllViews();
-                            initiateGame();
-                        }
-                    })
-                    .setActionTextColor(getResources().getColor(R.color.purple_200))
-                    .show();
+            if (inputs.size() > iterator) {
+                Snackbar.make(parent, "Correct", Snackbar.LENGTH_INDEFINITE)
+                        .setTextColor(getResources().getColor(R.color.white))
+                        .setAction("Next", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                editText.setText("");
+                                linearLayout.removeAllViews();
+                                linearLayout1.removeAllViews();
+                                initiateGame();
+                            }
+                        })
+                        .setActionTextColor(getResources().getColor(R.color.purple_200))
+                        .show();
+            } else {
+                Snackbar.make(parent, "Congratulations, All Finished!", Snackbar.LENGTH_INDEFINITE)
+                        .setTextColor(getResources().getColor(R.color.white))
+                        .setAction("Return", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                editText.setText("");
+                                linearLayout.removeAllViews();
+                                linearLayout1.removeAllViews();
+                                inputs.clear();
+                                setContentView(R.layout.add_word_layout);
+                            }
+                        })
+                        .setActionTextColor(getResources().getColor(R.color.purple_200))
+                        .show();
+            }
         } else {
             Snackbar.make(parent, "Incorrect", Snackbar.LENGTH_INDEFINITE)
                     .setTextColor(getResources().getColor(R.color.black))
@@ -224,10 +256,9 @@ public class MainActivity extends AppCompatActivity {
                             options = shuffle(options);
                             linearLayout.removeAllViews();
                             linearLayout1.removeAllViews();
-                            for (int i = options.size() -1 ; i >= 0 ; i--)
-                            {
+                            for (int i = options.size() - 1; i >= 0; i--) {
                                 String key = options.get(i);
-                                if(i>4)
+                                if (i > 4)
                                     addView(linearLayout, key, editText);
                                 else
                                     addView(linearLayout1, key, editText);
@@ -238,5 +269,6 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         }
     }
+
 
 }

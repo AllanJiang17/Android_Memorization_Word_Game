@@ -5,18 +5,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/menu_background"
     android:orientation="vertical"
-    android:id="@+id/add_word_layout">
+    android:id="@+id/add_word_layout"
+    android:fitsSystemWindows="true"
+    android:layout_alignParentBottom="true">
 
     <Button
+        android:id="@+id/returnButton"
         android:layout_width="100dp"
         android:layout_height="40dp"
-        android:text="Return"
-        android:textSize="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:onClick="returnMenu"
-        android:id="@+id/returnButton"
-        ></Button>
+        android:text="Return"
+        android:textSize="15dp"></Button>
 
 
     <com.google.android.material.textfield.TextInputLayout

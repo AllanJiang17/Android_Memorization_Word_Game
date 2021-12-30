@@ -1,7 +1,15 @@
 package com.example.wordgamestudytool.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+
+@Entity
 public class Input {
+
+    @ColumnInfo(name = "question")
     private String question;
+
+    @ColumnInfo(name = "answer")
     private String answer;
 
     public Input(String question, String answer) {

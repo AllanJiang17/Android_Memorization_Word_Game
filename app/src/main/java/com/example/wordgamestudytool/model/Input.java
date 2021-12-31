@@ -2,9 +2,13 @@ package com.example.wordgamestudytool.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity
 public class Input {
+
+    @PrimaryKey(autoGenerate = true)
+    private int uid;
 
     @ColumnInfo(name = "question")
     private String question;
@@ -15,6 +19,14 @@ public class Input {
     public Input(String question, String answer) {
         this.question = question;
         this.answer = answer;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     public String getAnswer() {

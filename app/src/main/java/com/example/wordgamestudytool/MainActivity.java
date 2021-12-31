@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
             Input input = new Input(q, a);
             saveDB(input);
+            inputs.add(input);
         }
     }
 
@@ -239,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
                                 editText.setText("");
                                 linearLayout.removeAllViews();
                                 linearLayout1.removeAllViews();
-                                inputs.clear();
                                 setContentView(R.layout.add_word_layout);
                             }
                         })

@@ -85,10 +85,12 @@
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_below="@+id/view_button"
+        android:id="@+id/startButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:onClick="complete"
         android:text="Start"
         android:textSize="15dp"></Button>
+
 
 </RelativeLayout>

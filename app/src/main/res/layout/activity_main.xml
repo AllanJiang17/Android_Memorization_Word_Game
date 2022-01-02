@@ -7,8 +7,18 @@
     android:background="@drawable/menu_background"
     android:orientation="vertical"
     tools:context=".MainActivity"
-
     >
+
+    <com.scwang.wave.MultiWaveHeader
+        android:id="@+id/waveHeader"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:mwhCloseColor="#7f438c"
+        app:mwhStartColor="#779aa8"
+        app:mwhWaveHeight="100dp"
+        app:mwhVelocity="10"/>
 
     <TextView
         android:layout_width="350dp"

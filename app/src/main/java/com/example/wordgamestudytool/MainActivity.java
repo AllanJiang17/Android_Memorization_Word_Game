@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView listRecycleView;
     private static ArrayList<Input> inputs;
     RecListViewAdapter recListViewAdapter;
+    MediaPlayer completedSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         inputs = (ArrayList<Input>) loadDB();
         recListViewAdapter = new RecListViewAdapter();
+        completedSound = MediaPlayer.create(this, R.raw.completed);
     }
 
     private List<Input> loadDB() {
@@ -66,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     public void returnInsertFromGame(View view) {
         progressBar.destroyDrawingCache();
         progressBar.setProgress(0);
+        EditText editText = findViewById(R.id.answers);
+        editText.setText(null);
+        counter = 0;
         setContentView(R.layout.add_word_layout);
     }
 
@@ -183,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         //textView.setFocusable(true);
         textView.setTextSize(25);
 
-        textQuestion = (TextView) findViewById(R.id.textQuestion);
+        textQuestion = findViewById(R.id.textQuestion);
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (editText.getText().toString().equals(answer.toLowerCase())) {
             progressBar.incrementProgressBy(1);
+
             if (inputs.size() > iterator) {
                 Snackbar.make(parent, "Correct", Snackbar.LENGTH_INDEFINITE)
                         .setTextColor(getResources().getColor(R.color.white))
@@ -232,12 +240,13 @@ public class MainActivity extends AppCompatActivity {
                         .setActionTextColor(getResources().getColor(R.color.purple_200))
                         .show();
             } else {
+                completedSound.start();
                 Snackbar.make(parent, "Congratulations, All Finished!", Snackbar.LENGTH_INDEFINITE)
                         .setTextColor(getResources().getColor(R.color.white))
                         .setAction("Return", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                editText.setText("");
+                                editText.setText(null);
                                 linearLayout.removeAllViews();
                                 linearLayout1.removeAllViews();
                                 setContentView(R.layout.add_word_layout);
